@@ -95,15 +95,21 @@ $sendLocationButton.addEventListener('click', () => {
 
     $sendLocationButton.setAttribute('disabled', 'disabled')
 
-    navigator.geolocation.getCurrentPosition((position) => {
-        socket.emit('sendLocation', {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-        }, () => {
-            $sendLocationButton.removeAttribute('disabled')
-            console.log('Location shared!')  
-        })
-    })
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            socket.emit('sendLocation', {
+                latitude: position.coords.latitude, 
+                longitude: position.coords.longitude
+            }, () => {
+                $sendLocationButton.removeAttribute('disabled');
+                console.log('location shared')
+            })
+        }, 
+        (err) => {
+            $sendLocationButton.removeAttribute('disabled');
+            return alert('Geolocaton not supported by your browser');
+        }
+    );
 })
 
 socket.emit('join', { username, room }, (error) => {
